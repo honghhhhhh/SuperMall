@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximun-scale=1.0, user-scalable=no">
+    <title>Vue</title>
+    <script src="./js/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    {{param}}
+    <p>大家好，我是<span>{{name}}</span>!</p>
+    <p>我是一名<span>{{jop}}</span>.</p>
+    <p>nameJob=<span>{{nameJob}}</span>.</p>
+    <button @click="modifyInfo">修改</button>
+</div>
+
+<div id="app1">
+    <ul>
+        <li v-for='item in dianying'>{{item}}</li>
+    </ul>
+
+</div>
+
+<script>
+    // let 变量
+    // const 常量   修饰对象时 对象不可改变 但是 对象的内部属性是可以改变的
+
+    //porxy 代理
+
+
+    const obj = {
+                    param:"这是一个测试",
+                    name:"张三",
+                    jop:"医生"
+                };
+
+    var flag = true;
+
+    const app = new Vue({ //简单数据显示
+        el: '#app',
+        data: obj,
+        computed:{//计算属性
+            nameJob:function(){
+              return this.name + '' + this.jop;
+            }
+        },
+        // computed:{//计算属性 完成写法
+        //     nameJob:{
+        //       set:function(param){
+        //       },
+        //       get:function(){
+        //         return this.name + '' + this.jop;
+        //       }
+        //     }
+        // },
+        methods:{
+            modifyInfo:function(){
+                if(flag){
+                    this.name = "李四";
+                    this.jop = "老师";
+                    flag = false;
+                }else{
+                    this.name = "张三";
+                    this.jop = "学生";
+                    flag = true;
+                }
+            }
+        }
+    })
+
+
+    const app1 = new Vue({ //列表展示
+        el: '#app1',
+        data:{
+            dianying:['a','b','c','d']
+        }
+    })
+
+
+    //编程范式
+    //命令式编程
+    //声明式编程
+    //响应式 当数据改变式 页面就相应 改变
+    //语法糖
+    // v-on:click <==> @click
+    // v-bind: <==> :
+    //双大括号语法 Mustache(胡子, 胡须)语法
+    // 支持简单的表达式 拼接  {{a + '' + b}} {{a * 2}}
+    // v-once 后面不需要表达式 保持第一次的值 当值修改时 页面不进行响应
+    // v-html='url' <a href='www.baidu.com'>百度一下</a>
+    // v-text='文本' 让dom相应字符串
+    // v-pre 不需要表达式 原封不动的显示 不进行解析和响应
+    // v-cloak 不需要表达式 vue解析后 会删除改属性 可以进行特殊化处理 比如控制显示不显示 颜色样式等
+    // v-bind:   <img v-bind:src='imgUrl' alt=''>
+    // v-bind:class='active: boolean'  从函数里面控制 Boolean的取值 当未false时候 不显示该属性  可以和class 共存
+    // class后的属性 可以进行抽离 抽离到方法里面 return 返回想要的值 即可
+    // 数组语法 :class="[a, b]"
+    // vue语法 style   key=value   key 可以不加单引号 value必须加单引号 如果不加 vue会按照变量进行解析
+    // computed 计算属性 计算属性 会使用缓存 只有第一次调用的时候进行计算 后续如果数据不改变则并不会执行 而如果用methods进行处理 每一次调用都会执行一次该方法
+    // computed 使用的时候 逻辑上返回的是处理后的参数 所有作为参数 就不需要加() 也是可以的  但是methods 是不可以不加()的 因为 他是一个方法
+    // es5  var 作用域问题 通过闭包解决  es5作用域 只有函数可以限制作用域 if  for 代码块 是不能划分作用域的 只能用闭包方法来实现  es6 let 可以解决 块级作用域 所有 用let代替var
+    //
+    // 方法 methods 参数传递 编写方法的时候 如果没有参数 则调用的时候 可以不写()
+    // 如果预留 myMethods(evet){} 调用的时候 不指定参数 也不写括号 vue也会默认把evet(事件对象)传递到方法中(例如这次是鼠标左键单击事件,
+    // 然后获取鼠标点击位置等等属性) 如果既要传一般参数 有要传事件参数 在调用的时候 用 $evet
+    //
+    // es6
+    // for(let i in this.arr ){ console.log(arr[i]); }
+    // for(let a of this.arr ){ console.log(a); }
+    // 对象增强写法
+    // const name = 'zhangsan';
+    // const age = '18';
+    // const app = {  //es5普通写法
+    //    name : name,
+    //    age : age,
+    //    run : function(){}
+    // }
+    // const app = { //es6 对象增强写法
+    //    name,
+    //    age,
+    //    run(){}
+    // }
+    //  浏览器 event 对象   参数传入 event对象 需要加$符号    $event
+    //
+    // v-on 修饰符  阻止事件冒泡  @click.stop
+    // 阻止 submit 提交  @click.prevent
+    // 监听键盘点击  @keyup.enter=""    监听 键盘 enter键 松开的时候
+    // 监听 组件    @click.native=""
+    // 只有第一次执行 @click.once=""
+    // v-if   true的时候 元素显示   v-else-if 从上往下 当上面的 v-if 不满足时 调用 v-else-if     v-else  上面全部不满足的时候 执行   这三个 一般都是配合再一起使用
+    // vue 虚拟dom渲染的时候 当不会同时存在的 比如 if else 这种 他会复用已经存在的元素 然后替换 不同的部分 但是比如input 输入的value属性 他不会进行替换 因为没有指定value  可以加属性 :key="" 进行区分 当key指定的不一致的时候 不会进行复用 当key一致的时候 进行复用
+    //
+    // v-if  和  v-show 的区别 v-if 为false 是 不渲染该元素到dom
+    // v-show 只是增加 display属性 操控 display 控制显示或者不显示
+    //
+    // v-for 便利数组  v-for="(item, index) in arr" 便利对象 v-for="(key, value) in arr"  如果只获取一个元素 则 默认 是value  想获取 key和 value 则需要这样写
+    // diff 算法
+    // Object.push()  向数组的末尾添加一个或多个元素，并返回新的长度。              可以响应式
+    // object.pop()   用于删除并返回数组的最后一个元素。                           可以响应式
+    // Object.shift() 把数组的第一个元素从其中删除，并返回第一个元素的值。           可以响应式
+    // Object.unshift() 可向数组的开头添加一个或更多元素，并返回新的长度。           可以响应式
+    // Object.splice()  向/从数组中添加/删除项目，然后返回被删除的项目。            可以响应式
+    // Object.sort()  用于对数组的元素进行排序。                                   可以响应式
+    // Object.reverse()  用于颠倒数组中元素的顺序。
+    // 过滤器 在new vue对象时候 filters 也是他的一个方法 声明方式和methods一致 调用有差别  methods 是通过绑定事件进行使用 例如 @click:"clickMethod" filters 是对数据进行统一处理的 例如 对需要的数据 加上 '$' 前缀 则所有需要用到'$'前缀的数据 在使用的时候 {{param | paramFilter}}
+    // 可以响应式
+    // 通过索引更改数据                                                           没法响应式
+    // 可以根据 splice方法 和 vue.set(要更改的对象, 更改的索引, 想要更改成什么数据)  来替换索引更改数据   这些都是可以响应式
+    // filter/map/reduce  高阶函数
+    // const newArr = arr.filter(function(n){return n<100;})  回调函数返回boolean值 当为true的时候自动加到一个新的数组 最后返回一个数据
+    // const newArr = arr.map(function(n){return n*2})   回调函数返回数字  将数据每个数据 都进行处理后 放到一个新的数组 最后把这个数组返回
+    // const return = arr.reduce(function(preValue,n)(return preValue + n),0)  两个参数 一个回调函数 一个首个值的初始化 回调函数返回数字 便利数组 记录上次回调函数返回的值 最后将值返回
+    // vue使用 v-model 对 表单和数据的双向绑定
+    // 使用 例如<input id="text" v-model="myText"/> {{myText}} 这样input框里面输入的数据就可以更新 vue对象的数据 是实时的 是更改一个字符 随即就改变 如果向在用户回车会改变 加修饰符
+    // v-model 修饰符
+    // v-model.lazy 懒加载 表单的数据 在用户回车或失去焦点是才进行绑定
+    // v-model.number v-model默认提交字符类型 如果想提交数字 加上v-model.number即可
+    // v-model.trim 去除两端空格
+    // 组件化开发
+    // 三个步骤 创建组件构造器 注册组件 使用组件
+    //  const con = Vue.extend({ //创建组件构造器
+    //      template:'<div>******<div>'
+    //  })
+    //
+    // Vue.component('组件名', cpn)//注册组件 (全局组件)
+    //
+    // html中可以 使用组件名的标签使用组件  <组件名></组件名> //使用组件
+    //
+    //
+    // 全局组件 局部组件  在注册组件的时候
+    //
+    // Vue.component('组件名', cpn) (全局)
+    //
+    // const app = new Vue({ //局部组件  只在app里面可以使用
+    //     el: '#app',
+    //     data: obj,
+    //     computed:{//计算属性
+    //          nameJob:function(){
+    //              return this.name + '' + this.jop;
+    //          }
+    //      },
+    //      components:{
+    //          组件名:cpn,
+    //          组件名:cpn,
+    //          ...
+    //      }
+    // })
+    //
+    // 父组件 子组件
+    // const con = Vue.extend({
+    //      template:'<div>******<div>       //父组件
+    //                  <组件名></组件名>
+    //                  ',
+    //      components:{     //子组件
+    //          组件名:cpn,
+    //          组件名:cpn,
+    //          ...
+    //      }
+    //  })
+    //  然后在new vue里面 放入父组件  在html中使用的时候就会带着子组件 单独使用子组件 不起作用
+    //
+    // 组件的语法糖注册方式
+    // Vue.component('组件名', { //创建全局组件语法糖  创建和注册写到了一起
+    //      template:'<div>******<div>'
+    //  })
+    //
+    // const app = new Vue({ //局部组件  只在app里面可以使用
+    //     el: '#app',
+    //     data: obj,
+    //     computed:{//计算属性
+    //          nameJob:function(){
+    //              return this.name + '' + this.jop;
+    //          }
+    //      },
+    //      components:{
+    //          组件名:{
+    //                      template:'<div>******<div>'
+    //          },
+    //          组件名:{
+    //                      template:'<div>******<div>'
+    //          },
+    //          ...
+    //      }
+    // })
+    //
+    //
+    // 模板的分离写法
+    //   方法一
+    // <script type="text/x-template" id="组件名">
+    //      <div>****</div>
+    // <\script>
+    //  方法二
+    //  <template id="组件名">
+    //      <div>****</div>
+    //  </template>
+    //
+    // Vue.component('组件名', { //创建全局组件语法糖  创建和注册写到了一起
+    //      template:'#组件名'
+    // }
+    //
+    // 组件是无法访问 vue实例的数据
+    // 组件里面有data属性 用来存放自己的数据 data属性是一个函数 返回的是一个对象 这样可以是一个函数 相互不影响 如果不用返回对象 数据会相互影响 有自己的方法 组件就是一个函数
+    // Vue.component('组件名', { //创建全局组件语法糖  创建和注册写到了一起
+    //      template:'<div>******<div>',
+    //      data(){
+    //          return {
+    //              tiltle:"标题"
+    //            }
+    //      },
+    //      methods:{
+    //            modifyInfo:function(){
+    //                if(flag){
+    //                    this.name = "李四";
+    //                    this.jop = "老师";
+    //                    flag = false;
+    //                }else{
+    //                    this.name = "张三";
+    //                   this.jop = "学生";
+    //                    flag = true;
+    //                }
+    //            }
+    //        }
+    //  })
+    //
+    //
+    // 父子组件的通讯
+    // 父传子
+    // 父组件通过props (properties)(属性)向子组件传递数据
+    // 子组件通过事件向父组件发送消息
+    //
+    // <div id="app">
+    //     <cpn :ctiltle="title" :ctext="text"></cpn>
+    // </div>
+    //
+    // <template id="cpn">
+    //     <div>{{ctitle}} + '' + {{ctext}}</div>
+    // </template>
+    //
+    //     Vue.component('组件名', { //创建全局组件语法糖  创建和注册写到了一起
+    //         template:'#cpn',
+    //         props:{
+    //             ctitle:{
+    //                 type: ,
+    //                 default: ,
+    //                 required:
+    //             }
+    //             ctext:{
+    //                 type: ,
+    //                 default: ,
+    //                 required:
+    //             }
+    //         }
+    //         data(){
+    //              return {
+    //                  tiltle:"标题"
+    //               }
+    //          },
+    //          methods:{
+    //          }
+    //       })
+    //
+    //
+    // const app = new Vue({ //简单数据显示
+    //     el: '#app',
+    //     data: {
+    //         title:"标题",
+    //         text:"内容"
+    //     },
+    //     components:{
+    //         cpn:cpn
+    //     }
+    // })
+    // 子传父
+    // 在子组件的方法里面 this.$emit('父组件方法名')
+    // 然后父组件在
+    //      <div id="app">
+    //          <cpn @子组件指定发射的父组件方法名='父组件方法'></cpn>
+    //      </div>
+    // 然后在父组件里面编写好 父组件的方法 这样 子组件在发生任何处理的时候 都可以发射(传递)给父组件
+    //
+    // 子组件里面有一个属性是 watch 跟methods一样 也是定义方法的 里面的方法就是监听参数改变的
+    //
+    //
+    // 父子组件的访问方式   相互获取子组件或者父组件的对象
+    //
+    // 父组件拿到子组件的对象 调用子组件的方法获取获取子组件的属性 this.$children; 获取的是一个数组 获取了该父组件下面 所有的子组件
+    // 但是用下标来拿子组件 变数太大 如果html顺序改变 角标可能会变化
+    // 父组件里面的子组件 加一个ref属性 ref="aaaa" 父组件 使用 this.$refs("aaa"); 一样可以获取到 子组件的对象 然后调用子组件的方法 使用子组件的属性 都可以
+    //
+    // 子组件访问父组件 (一般不提倡 子组件去获取父组件数据 这样 子组件和父组件耦合度太高 如果子组件复用的使用 其他的父组件没有子组件获取的父组件属性 会报错 所以会影响复用性)
+    // this.$parent 只能获取到父亲 爷爷组件其他上级 获取不到
+    // this.$root 获取根组件 直接访问到 vue实例
+    //
+    // 组件的插槽slot (类似于java 的接口) 抽取共性 保留不同 不同的抽离成插槽 然后在调用的时候 自定义
+    // 比如 cpn定义的时候定义了一个slot插槽 那个调用的使用 就是<cpn>//自定义的内容</cpn>
+    // (只有一个插槽 然后自定义多行内容的时候 所有的内容都会当作一个插槽传入 如果多个插槽 之传入一个内容 会把所有的插槽都替换掉)
+    // 插槽可以给定默认值 <slot><button></button></slot>
+    //
+    // 具名插槽
+    // 给 slot标签 添加一个name属性 在自定义插槽内容里面加上属性 slot="插槽name" 不指定内容 默认替换所有未命名组件
+    //
+    // 作用域插槽
+    // 父组件替换插槽的标签 但是内容由子组件提供
+    //
+    // <div id="app">
+    //  <cpn>
+    //   <div slot="myslot"> 自定义插槽内容 </div>   //使用具名插槽
+    //   或者
+    //   <template slot-scope="aaa">{{aaa.data}}</template>     //使用作用域 插槽  让子组件 提供数据 父组件进行自定义
+    //    //作用域组件 高版本的vue支持 任意标签使用 但是稍低一点的版本 不支持 只能用template 标签 使用子组件数据
+    //  </cpn>
+    // </div>
+    //
+    // <template id="cpn">
+    //  <slot name="myslot" :data="子组件想要传递给使用这个插槽的父组件的数据"> :data  data是可以随意指定的 是 子组件为传递给父组件的数据起的一个名称
+    //    //插槽默认的展示
+    //  </slot>
+    // </template>
+    //
+    // 模块化开发
+    // 普通开发 多人共同开发时候  每个人的js在导入项目的时候 其实都是放到一起的 可能会出现各种问题 比如参数名重复等问题
+    // 解决这个问题 就会用到匿名函数闭包进行规定每个js里参数的作用域 不受别的js干扰
+    // 但是这样的话 就没法复用了 所以 要命名一个模块 var 模块名称 = (function('参数名'){var param = 参数名 ; return param;})('参数名')
+    // 这样别的js想要复用这个js的一些数据或者方法时候 就可以 定义模块的时候 返回一些数据 然后通过定义的模块名称去使用这些返回回来的数据就可以了
+    // 这就是模块化最基础的封装
+    //
+    // 模块化封装还有高级的话题  现在前端模块化开发有了很多既有的规范 以及对应的实现方案
+    // 常见的模块化规范 CommonJS AMD CMD 也有ES6的 Modules
+    // 模块化 有两个核心 一个是导入 一个是导出
+    // 导出是模块返回的数据 就是导出的  导入的 是另外的js在使用这个模块的时候调用模块并使用模块返回的数据 这个数据模块的导入
+    // 所有的模块化规范 都有这两块 只是具体的格式和实现样式不太一样而已
+    //
+    // commonJS 语法 格式
+    // 一个js默认认为是一个模块 所以不需要再进行匿名函数的封装
+    // 当有需要导出的数据 语法是 module.exports = { flag: true, test(a, b){ return a + b }}
+    // 导入的语法 var {flag, test} = require('想导入的js路径')
+    // 这是对象的一种增强写法 等同于 var aaa = require('想导入的js路径') var flag = aaa.flag  var test = aaa.test
+    //
+    // ES6 的导入和导出
+    // 在导入响应的js文件的时候 加上属性type="module" 例如<script src="aaa.js" type="module"><\script> 这样 es6就会把这个js文件自动封装成一个模块
+    // export export{ flag, test}  或者在声明变量和方法的时候 直接前面加 export 关键字 就可以实现导出 导入方法不变
+    // 还有一种导出是 var aaa = "小明" export default aaa 这样导出的这个aaa 并没有指定名称 其他导出的时候 都是默认名称的 导入的时候必须指定名称
+    // 被 export default修饰的  需要导入的时候 使用的时候 进行导入操作的人员来进行命名 不能带括号 import 自定义名称 from *** 一个模块里 只能有一个 export default  export default 也能修饰方法 export default function(){} 不需要指定方法名
+    //
+    // import {flag, test} from "./aaa.js"
+    // import * as aaa from *****   使用的时候 console.log(aaa.flag);
+    //
+    // webpack
+    // webpack 和 grunt/gulp对比
+    // grunt/gulp核心是task 可以配置一系列的task 然后定义好task是做什么(ES6转ES5,scss转css等)
+    // 然后让gulp执行这些task 从而是整个流程自动化
+    // grunt/gulp 也被称为前端自动化任务管理工具 没有模块话的概念 只能进行简单的合并压缩等
+    // webpack 更关注的是模块化开发管理 对于文件压缩合并,预处理等 只是他的其中一个方面 附带的功能而已
+    //
+    // webpack 依赖环境
+    // 安装webpack
+    //
+    // webpack起步
+    // webpack命令
+    // webbpack配置 webpack.config.js/package.json(script)
+    //
+    // webpack的各种loader(模块,是转换器)
+    // css-loader/style-loader
+    // less-loader/css-loader/style-loader
+    // url-loader/file-loader
+    // babel-loader
+    //
+    // webpack配置Vue
+    // vue-loader
+    //
+    // webpack的plugin(插件, 是拓展功能)
+    // BannerPlugin 版权插件 添加版权声明  在打包后的js里面 添加头部版权信息
+    // HtmlWebpackPlugin  自动生成index.html文件(可以自定义模板)
+    // 并自动将打包后的js通过script标签插入到body
+    // uglifyjs-webpack-plugin js丑化(压缩)插件
+    //
+    // 有一个配置文件 .editorconfig 规定html格式 缩进 空行之类的
+    //
+    // 搭建本地服务器 基于nodejs 内部使用express 可以实现浏览器自动刷新我们修改的内容 使用的时候还是用 npm先安装
+    //
+    // 配置文件的分离
+    //
+    // 在vue-cli里面 配置会帮你生成、各种loader使用的也会帮你加载 包括配置文件的分离都是会为你做好
+    //
+    // vue 全家桶  vueCode+vue+router+vuex
+    //
+    // ES(js)-Lint 一个js格式检查工具
+    // Chrome(V8引擎)因为他把js直接编译成二进制跳过字节码 所以快 但是现在火狐之类的其他浏览器 也都是用了V8引擎  因为V8引擎是开源的 nodejs 使用C++开发的 将js运行在服务端 底层用的就是V8引擎
+    // 如果安装了想关闭 vue-cli2的项目 config文件夹下有一个 index.js 里面有一个eslint 将true改为false
+    //
+    // vue-cli2
+    // 依赖webpack 所以还是需要有node环境(webpack需要用node里面的npm下载包) 然后使用node的包管理工具npm进行安装 (npm只是node内部的一个包管理工具)
+    // vue-cli2初始化项目的过程 要选择各种选项
+    // 使用vue-cli2生成的目录结构解析
+    // 生成vue-cli2项目
+    // vue init webpack 项目名称   (vue -V 查看的就是vue-cli的版本  vue使用的版本 去项目里面响应的配置文件查看 所有 vue命令 其实是vue-cli的命令)
+    //
+    // 构建vue-cli12 项目 时候 选择 runtime-compiler 和 runtime-only 的区别
+    // 区别主要在于 main.js里面 runtime-compiler 使用了temlate标签 然后通过componts进行注册使用 但是在runtime-only里面直接使用了render函数
+    // 这样性能会更好 并且底层代码量也更少 因为 vue的解析步骤 template -> ast(抽象语法树) -> render函数 -> 虚拟dom > 真实的dom
+    // runtime-only  直接省略了 解析 template 的步骤 直接到了 render函数 所有性能更快 然后 也不需要解析template 的代码 所以代码量更少
+    // 至于 项目里 .vue文件里面使用的 template 并不是通过 runtime-compiler 来解析的 而是 构建webpack的时候 有一个 vue-template-compile 所以到 runtime-compiler 执行的时候 代码里面的template 已经解析完了 并不存在template了
+    // 所以 推荐使用 runtime-only
+    //
+    // render函数
+    //
+    // webpack.base.conf.js     起别名
+    //
+    // vue-cli3
+    // 与vue-cli2 的区别 (使用的vue版本没变 vue-cli 只是工具 所以 只是工具升级 vue底层支持还是 vue2.x版本)
+    // vue-cli3 基于webpack4  vue-cli2 基于 webpack 3
+    // vue-cli3 设计原则 "0配置" 移除配置文件根目录的 build和config文件夹
+    // vue-cli3 提供了 vue ui 的命令 提供可视化配置 更加人性化
+    // 移除了static(webpack在打包的时候 会自动将static文件夹中的内容原封不动的放到包里面)文件夹 新增了public(本质和static相同)文件夹 并且index.html 移动到了 public 中
+    //
+    // vue-cli3 构建项目 的命令    vue create 项目名称
+    // 执行后 会提供一个选择 一个是默认  一个是手动选择
+    // 手动选择的时候 上下键切换  空格选择
+    // 选择后也可以选择将配置文件单独列出来 还是 全部放到package.json里面 直接在后面添加
+    // 然后也可以把这个方案自定义 以后可以直接在选择界面选择这个 直接就按照这次的习惯创建了
+    // 如果想删除自定义的方案 在用户文件夹下面 .vuerc 可以将相应的部分删除 后缀rc 一般理解为 runtime commond 运行命令 也就是命令行的意思
+    //
+    // main.js里面 new vue({render:h => h(App)}).$mount('#app')       .$mount('#app') 和 在vue里面声明 el:"#app" 是一样的 源码里面 就是 检测如果你有el属性 就在后面加上.$mount('#app')   所有怎么写 表达的意思都是一致的
+    //
+    // 配置文件被隐藏了 可以在包 node_modules/@vue/cli-service/webpack.config.js 找到 都被封装到了这个文件夹
+    // 然后要修改配置文件 则 自建 一个 vue.config.js (名称是固定的) 然后在里面编写配置 然后到时候编译的时候 会跟webpack.config.js 这些配置文件进行合并
+    //
+    // ES6箭头函数 和 java 的lamda表达式不一样 (parameters) -> expression 或 (parameters) ->{ statements; }  箭头是横线  箭头函数 是等号
+    // const aaa = function(){}
+    // const aaa = () => {}
+    // 如果只有一个参数 括号可以省略
+    // const aaa = num => {//code}
+    // 如果方法体里面只有一行代码 大括号可以省略 不用写return 他会自动把这行代码的返回值return 对于没有返回值的代码 就直接return undefined
+    // 对象里面的方法
+    // const obj = {
+    //      aaa: function(){}
+    //      aaa(){}
+    // }
+    // new vue({
+    //      render: h => h(App)   这个的意思就是 render 是对象里面的一个函数  参数只有一个 是 h 所以将小括号省略 然后 函数体 只有一行代码 h(App) 所有大括号省略 然后还有一点就是 这个看来 参数h 传进来的就是一个函数 所以才能执行
+    // })
+    //
+    // 箭头函数的this问题    箭头函数的this 首先箭头函数是没有this的 他的this 他会一层一层的往上 找自己父组件的this 知道找到位置 最终就是window
+    //
+    // 箭头函数一般用于内部类 就是参数需要传入一个函数是 用箭头函数 会更清晰   java lamda表达式也是差不多 一般也用于内部类的方法调用之类的
+    // 例如: java lamda表达式用法
+    // public class Java8Tester {
+    //
+    //      final static String salutation = "Hello! ";
+    //
+    //      public static void main(String args[]){
+    //          GreetingService greetService1 = message ->
+    //              System.out.println(salutation + message);
+    //            greetService1.sayMessage("Runoob");
+    //      }
+    //
+    //      interface GreetingService {
+    //            void sayMessage(String message);
+    //      }
+    // }
+    //
+    //
+    //
+    // 前端路由  Vue-Router
+    // 前端路由实现有一个前提是 当url改变的时候 不去重新请求服务器 这样才能去让前端路由去分配相应的页面
+    // 这个有两种解决方案 一种是 html5 history  一种是 改变url的hash 使用这两个 可以该表url的路径 但是浏览器不会去直接请求导致刷新页面 可以传递给路由 让路由去处理相应的跳转
+    // location.href = 'aaa'  这是改变超链接 这种浏览器会直接访问新地址
+    // location.hash = 'aaa'  这个虽然改变了url 但是 浏览器不会去进行请求
+    //
+    // history.pushState({},'','aaa') 跳转url 保留历史记录 可以使用 back 和 forward 进行前后跳转
+    // history.back()向前回退    这个类似于一个栈操作 push进去的时候 他都会保留历史记录 然后通过back在出栈 然后就返回到了 上一个push的元素
+    // history.forward()向后下一个
+    // history.go(-1) 可以指定前进 后退几个页面    back() 等价于 go(-1)   forward() 等价于 go(1)
+    //
+    // history.replaceState({},'','aaa') 这个相对于push 的区别是 不会保留历史记录 因为replace是直接替换 而不是放入类似栈结构 可以保留
+    //
+    // 前端框架不同的路由实现
+    // Angular的ngRouter
+    // React的ReactRouter
+    // Vue的vue-router  他是vue.js的官方路由插件 是一个插件 所以需要自己导入也得去引用 可以在用vue-cli创建项目的时候直接选择 也可以项目构建完 之后手动去导入 他和vue.js是深度集成的 适合用于构建单页面应用
+    // vur-router是基于路由和组件的
+    // 路由用于设定访问路径 将路径和组件映射起来
+    // 在vue-router的单页面应用中 页面的路径的改变就是组件的切换
+    //
+    // vue-router基本使用
+    // 安装
+    // 使用npm安装  npm install vue-router --save
+    // 在模块化工程中使用他 因为他是一个插件 所以可以通过 vue.use()来安转路由功能
+    // 第一步 导入路由对象 import VueRouter from 'vue-router' 并使用  vue.use(Router) 在使用vue.use的时候 也需要想导入vue实例 import Vue from 'vue' 来使用他
+    // 第二步 创建路由实例 并且传入路由映射配置
+    // const routes = [{path:'', component:组件(这里使用的组件 也需要import 导入)},{path:'', component:组件},......]
+    // const router = new VueRouter({routes})
+    // 第三步 在vue实例中挂载创建的路由实例
+    // 先把创建的路由实例导出 export default router 然后 new Vue({ router })  直接放到Vue实例中就可以了
+    // 使用
+    // <router-link to='/home'>首页</router-link>
+    // <router-view></router-view> 规定 router-link 链接的相应的组件的展示位置
+    //
+    // router-link 里面除了to属性 还有其他的 tag属性 默认是 将rouer-link渲染为a标签 可以通过tag属性进行改变 例如 tag='boutton'
+    // 还有如果想使用history的replaceState 不保留历史记录 直接 加一个 replace 即可 不需要赋值
+    // 还有就是 router-link 被选中的时候 被选中的哪一个会默认给定一个 router-link-active 属性 可以通过 这个属性也指定  被选中的样式 例如底色变红 字体变大之类的
+    // 但是也可以通过 router-link中的 active-class='active' 来指定选中是添加的属性的名称 这样 选中的时候 默认添加的属性 就变成了 active 因为每一个都要添加 会很麻烦 所以可以在路由实例中 添加一个属性 LinkAvtiveClass='active' 效果一样
+    //
+    // 也可以不使用 router-link标签 通过代码实现 就是 <button @click="buttonClick">首页按钮</button> 然后再方法里 写 this.$router.push('/home') | this.$router.replace('/home')
+    //
+    // 动态路由
+    // 在配置路由映射关系的时候 路径上这么使用  /user/:userName  这样 意思是user后面  使用动态的一个 用户名字的参数
+    // 然后在router-link 使用 v-bind:to='/user/'+userName  然后 在router-link所在的实例里面 定义 userName属性即可  这样就可以实现跳转和url上拼接 userName
+    // 如果想在路由组件中使用 动态路由传递过来的参数  在组件对象中 定义一个属性 或者 computed计算属性 这里使用computed: {userName(){return this.$route.params.userName}}
+    // ($router  和  $route  的区别  $router 是一个全局路由的一个对象  $route 拿到的 是具体的当前处于活跃状态的那个路由对象)
+    //
+    // 路由的懒加载
+    // 之前书写的 在定义路由的时候 在上方 import 各个路由组件 然后再进行路由映射 这样 会产生所有的页面 在webpack打包的时候 全部打成了一个包 也就是说 项目一开始的时候 浏览器第一次 需要把所有的都请求过来 这样如果页面多逻辑复杂 会导致第一次加载很慢 所有我们把js划分一下 使用到相应的页面的时候 再去加载 这样 效率会高很多
+    // 现在 定义路由映射这么定义 不直接在上方全部import 而是定义路由映射的时候 这么些 const routes = [{path: '/home', component:() =>import('路由组件的位置')},{},......]
+    // 这么书写的时候 就会把js打包到不同的文件 然后使用的时候 就会分开
+    //
+    // vue-router嵌套路由
+    // 创建嵌套路由的步骤
+    // 创建对应的路由子组件 在路由映射中配置相应的子组件
+    // 在组件内部再加一个 <router-view>标签
+    //
+    // 在配置路由映射的时候 我们用到了 path 和 component 属性  还有一个 children 属性 然后在里面再配置相应的子组件的路由映射即可 这里面 path 是组路径的path 不带'/' 然后同理也能配置默认重定向 让url在/home的时候 自动重定向到 某个子组件
+    // 如 想要 /home/news 父路由配置的path是 '/home'  子路由的path为 'news'   然后在 父组件里面 加上相应触发的 router-link 这个的to属性 使用的还是'/home/news' 和 展示的区域 router-view
+    //
+    // 参数的传递
+    // 有两种 之前提到的 动态路由 这就是其中一种 叫 params的类型
+    // 还有一种就是 query的类型 路由还是普通配置 不需要想params类型一样 配置/user/:userName 还是普通的 /user
+    // 传递的方式是 在对象中使用 query的key作为传递方式  传递后的形式 就是/user?name=zhangsan
+    //
+    // 使用方法 router-link 通过 to属性 去跟url对应从而实现跟路由组件绑定 之前的用法是 to="/user" 动态路由是 :to="'/user'+username"  query方法是  :to="{path:'/user', query:{name:'zhangsna', age:'18', .......}}"
+    // 取参数的方法 和动态路由一致 动态路由是 $route.params.username  query是 $route.query.username  如果不指定具体的 直接 $route.query  获取的就是整个参数的对象
+    //
+    // 上述的是 router-link  的方式 如果使用代码进行绑定 也是一样的
+    // <button @click="userClick">用户页面</botton>
+    // 然后再方法里面
+    // this.$router.push('/user') 这是正常的路由跳转
+    // this.$router.push('/user'+this.username) 这是动态路由
+    // this.$router.push({
+    //      path:'/user',
+    //      query:{name:'zhangsna', age:'18', .......}
+    // }) 这就是query的方式
+    //
+    // vue-router导航守卫
+    // 意义是在组件之间跳转的时候 我想监听跳转 然后 执行一下逻辑 比如 统计点击量  统计用户喜欢的内容 等等 或者 要监听用户的跳转 在用户跳转的时候 去更新浏览器的title
+    // 全局导航守卫
+    // 在 定义完路由组件之后 使用路由组件
+    // 其实beforeEach 也是一个回调函数  他是before 跳转前回调的 需要在里面执行 next() 所以才能继续执行  还有一个是 afterEach 这个是 跳转后 执行的回调  他就不需要执行next 因为他已经执行完了
+    // router.beforeEach((to, from, next) => {
+    //      next()  这个是固定的 必须写
+    //      to是跳转到哪个组件 to就是哪个组件的对象  from 是 这个跳转是来自哪个组件  from就是 哪个组件的对象
+    //
+    //      下面实现 路由组件切换 更新浏览器title
+    //      document.title=to.meta.title  (在路由组件内部 再定义一个meta属性(元数据 描述数据的数据) 也是一个对象 可以存放数据)
+    //      其实有一些问题 对于嵌套的路由不好用 所以用可以解决 to.matched[0].meta.title
+    //      所以这个需要 最终的实现是
+    //      document.title = to.matched[0].meta.titles
+    // })
+    //
+    // 导航守卫 分为
+    // 全局守卫 只要是跳转 就会调用
+    // 路由独享守卫 只有进入某个特定的守卫 才执行
+    // 在这个路由的映射里面配置 就是 路由配置 除了有 path component meta  还有 beforeEach属性  用法和全局守卫 一致 也是 to from next 三个参数
+    // 组件内守卫 同理 在声明组件的时候配置守卫 使用方法一致 注册组件的 temlate同级 可以有 beforeEach 等等
+    // 这个具体 也可以看官网 官网全部有例子
+    //
+    // keep-alive 是vue内部的一个组件 可以使被包含的组件不会被销毁 避免每次加载都重新渲染
+    // 可以用它来实现记录组件内点击状态 例如 上次点击的是home组件里面的message 切换到别的组件再切换会home时 由于配置了默认的请求转发 所以还是会跳转近home/news
+    // router-view也是一个组件 是vue-router内部的一个组件 如果包含在 keep-alive里面所有的路径匹配的视图组件都会被缓存
+    // 首先 使用了 keep-alive 会有两个新的生命周期回调函数 一个是 actived 活跃时    deactived 非活跃时
+    //
+    // keep-alive 有两个 属性 一个是    include 匹配的组件会被缓存  exclude  匹配的组件不会被缓存 根据实际情况使用 他们都可以使用正则或者字符串 一般直接使用字符串 传入组件的name属性
+    //
+    // 记录首页状态  currentIndex或者使用下面方法
+    // 使用组件内守卫的回调函数beforeRouterLeaver 让他在跳转前记录一下 当前的url 例如 /home/message 然后声明一个参数 将url赋值给这个参数
+    // 等到再次点击回到home组件是 出发actived函数 这时候 在actived函数里面 通过this.$router.push(记录的url)  这个时候就可以实现 记录组件内状态
+    //
+    // 路由重定向
+    // 就是比如刚进入页面 我们直接重定向到首页   在映射配置中 加入 {path:'/', redirect:'/home'}
+    // 更改路由模式 在vue-router实例中 有一个属性 mode:'history' 就可以将 默认的hash模式 改变为 history模式  因为hash模式 url中会出现 #
+    //
+    // 真实项目中的抽离和封装 可以看 tabbar的封装 的 封装思路
+    //
+    // Promise
+    // 对异步请求进行处理 使其结构更加清晰
+    // 最简单的实现   正确回调  失败回调(如果不处理失败 reject可以省略)  所以变成这样 new Promise(resolve => { ......})
+    // new Promise((resolve, reject) => {
+    //      settimeout(() => {
+    //            resolve()
+    //      }, 2000)
+    // }).then(() => {
+    //      回调处理方法
+    //
+    //      如果用到回调方法里面用到了另外一个异步请求
+    //      return new Promise((resolve, reject) => {
+    //          settimeout(() => {
+    //                resolve()
+    //          }, 2000)
+    //      })
+    //
+    //      或者这么调用
+    //      return Promise.resole()
+    //
+    //      或者
+    //      return 参数
+    //
+    //      同理如果是失败的话 就是 throw ....
+    //
+    // }).then(() => {
+    //
+    //      第二个异步方法的回调
+    //
+    // }).catch(() => {
+    //
+    //      失败的回调
+    //
+    // })
+    //
+    // Promise.all  对多个异步请求进行整合 让所有异步请求全部执行完毕之后 再去执行某些方法
+    //
+    // Promise 如果需要的话 可以去再详细系统的学习 并且 还有面试题
+    //
+    //
+    //
+    // Vuex
+    // 专门为vue.js应用程序开发的状态管理工具 就是存放一些公用的参数
+    // 五个核心
+    // state 存放数据的
+    // mutations vuex指定的唯一修改state的途径  通过直接拿到state然后进行对参数进行赋值 可以实现变更 但是不符合vuex的逻辑 适得vuex的一个监控插件会不起作用
+    // getters 相当于计算属性 可以通过这个属性 对参数进行封装返回 例如想要该数据的平方或者加上某个数等等
+    // actions 当有异步操作的时候 必须通过actions去调用mutations
+    // module 定义单独的状态模块
+    // vuex规定 state是唯一的 等于说 项目中只能有一个状态管理容器来存放公用的参数
+    // 但是都放在一起会很臃肿也不方便管理
+    // 所以 通过module来进行分模块 在module里面可以定义子模块 每个子模块和state接口一致 都有state  mutations getters actions module等属性 但是 子模块就不再定义子模块了 所以module 一般不用
+    //
+    // 然后当Vuex数据多的时候 也可以进行抽离
+    // state 可以抽离到 当前的js
+    // 对于mutations  getters actions 一般都是抽离到 新的js
+    // 对于module 一般是新建一个文件夹 每一个子模块 新建一个js
+    //
+    //
+    // 网络请求的封装 (对于网络请求 一般 如果使用框架 都会进行工具类的封装 因为涉及到以后 如果切换框架 直接更改工具类具体实现 而不需要更改具体的使用 然后 直接使用  也会有一系列的安全性问题等)
+    // 以往对网络请求 有这么几种方式
+    // 1.传统的ajax
+    // 传统的ajax是基于XMLHttpRequest(XHR)
+    // 优缺点:
+    // 非常好解释,配置和调用方式等非常混乱
+    // 编码看起来非常蛋疼
+    // 所以真实开发中 很少适合用 而是 直接使用 jQuery-Ajqx(网络请求框架)
+    //
+    // 2.jQuery-Ajqx(网络请求框架)
+    // 优缺点:
+    // 对于传统的ajax相比非常的好用
+    // 但是为什么vue不使用jQuery-Ajax 因为现在整个的vue都不再使用jquery 仅仅是因为 要使用一个网络模块而去调用jQuery这个重量级框架 没有必要
+    //
+    // 3.官方在vue1.x版本 推出了 vue-resource
+    // vue-resource体积相对于jQuery小很多 然后还是官方推出的
+    // 但是继vue2.x之后 官方 不再舍弃了它 不再进行维护 所以也不再使用
+    //
+    // 4.axios
+    // vue作者 在宣布不再维护vue-resource的时候 推荐了 的框架 就是 axios
+    // 特点:优缺点
+    // 在浏览器中发送XMLHttpRequest请求
+    // 在node.js中发送http请求
+    // 支持promiseAPI
+    // 拦截请求和响应
+    // 请求转换和响应数据
+    //
+    // jsonp 解决跨域问题
+    // 原理等 后续再看...........
+    //
+    //
+    // axios 框架 (ajax库)
+    // 多种请求方式
+    // axios(config)
+    // axios.request(config)
+    // axios.get(url[,config])
+    // axios.delete(url[,config])
+    // axios.head(url[,config])
+    // axios.post(url[,data[,config]])
+    // axios.put(url[,data[,config]])
+    // axios.patch(url[,data[,config]])
+    //
+    // axios({
+    //   url:'xxxx',
+    //   method:'get',
+    //   .......
+    // })
+    //
+    // httpbin.org 模拟服务器处理请求
+    //
+    // axios.all  并发请求 相当于 promise.all 定义一个数组 在数组里面可以定义多个axios请求 因为axios内部就是支持的promise语法 所以和promise是一致的返回值也跟会放入数组
+    //
+    // 全局配置
+    // 例如url前缀 一般都是重复的
+    // 所有有一个全局配置 axios.defaults.相应的配置(例:baseUrl, timeout) = '参数'
+    // axios 常见用法中 都是传入 一个 config 配置信息的对象
+    // 里面包含的常见的配置选项有这些
+    // 请求地址    url:'/user'
+    // 请求类型    method:'get'
+    // 请求根路径  baseURL: 'http://xxxxx:xxx'
+    // 请求前的数据处理 transformRequest:[function(data){}]
+    // 请求后的数据处理 transformResponse:[function(data){}]
+    // 自定义请求头 headers:['x-Requested-With':'XMLHttpRequest']
+    // url查询对象 params:[id:12]
+    // 查询对象序列化函数 paramsSerializer:function(params){}
+    // request body data:{key: 'aa'}
+    // 超时设置 timeout:1000 (毫秒)
+    // 跨域是否带Token withCreadentials:false
+    // 自定义请求处理 adapter:function(resolve, reject, config){}
+    // 身份验证信息 auth:{uname:'',pwd:''}
+    // 相应的数据格式 json / blob /doucument / arraybuffer / text / stream   responseType:'json'
+    //
+    // 上述用的全部是全局的 axios和defaults 这样如果后续有别的服务器或这别的样式的请求 不好复用
+    //
+    // 所以一般我们都使用自定义axios对象
+    // const a = axios.create({
+    //      baseURL:'http://xxxxxx:xxx',
+    //      timeout: 1000,
+    // })
+    // 使用的时候直接
+    // a({
+    //      url:'xxxx',
+    //      method:'get',
+    //      ......
+    // })
+    //
+    // 但是实际开发中一般都是 不直接使用 而是再封装一层
+    // 所以新建一个网络请求的文件夹
+    // 在里面可以这么写
+    // export function a (config){
+    //
+    //      const instance = axios.create({
+    //          baseURL:'http://xxxxxxx',
+    //          tiimeout:5000
+    //      })
+    //
+    //      a.interceptors.request.use(config => {
+    //          //请求成功拦截处理代码
+    //          return config  //拦截完请求之后需要再返回  要不然 这个请求就断掉了
+    //      }, err => {
+    //          //请求失败代码
+    //      })
+    //
+    //      a.interceptors.response.use(res => {
+    //          //响应成功拦截处理代码
+    //          return res  //拦截完响应之后需要再返回  要不然 这个响应也就在这中止了
+    //      }, err => {
+    //          //响应失败代码
+    //      })
+    //
+    //      return instance(config)   //因为 axios 内部就是有一个promise对象  所以直接返回就行 可以用promise的语法进行使用
+    // }
+    //
+    // 使用的时候直接  a(config).then(res){}.catch(err){}
+    //
+    // axios拦截器
+    // 请求成功 请求失败 相应成功 相应失败
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    // 实际项目开发
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    // 移动端显示小 可以加一个标签
+    // <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    // <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximun-scale=1.0, user-scalable=no">
+    //
+    // 这句话的意思是，可以让网页的宽度自动适应手机屏幕的宽度。
+    // 其中：
+    // width=device-width ：表示页面宽度是设备屏幕的宽度
+    // initial-scale=1.0：表示初始的缩放比例
+    // minimum-scale=0.5：表示最小的缩放比例
+    // maximum-scale=1.0：表示最大的缩放比例
+    // user-scalable=no：表示用户是否可以调整缩放比例。
+    // width：控制 layout viewport 的大小，可以指定的一个值，如 600，或者特殊的值，如 device-width 为设备的宽度（单位为缩放为 100% 时的 CSS 的像素）。
+    // viewport  n.（电脑屏幕的）视口，视点  （来自 百度翻译）
+    //
+    //
+    //
+    // 前后端的几个阶段
+    // 1, 后端渲染, 后端路由阶段
+    // 用户输入网址  直接请求到服务器 服务器根据不同的url分配不同的controller来进行处理 处理完了之后 后端根据jsp 去进行渲染页面 发送到浏览器进行显示的时候 页面的样式和数据都已经是定好的了
+    // (这就是后端渲染)(然后这种url和页面的映射关系在后端处理这就是后端路由)
+    // 2, 前后端分离 这个时候就没有路由的概念了
+    // 用户输入网址 请求到静态服务器 访问静态html资源 然后根据js发送ajax请求 去跟后端接口进行交互 后端只提供数据接口 不涉及页面的显示
+    // (这个时候就是前后端分离)
+    // 3, SPA(单页富应用程序)页面
+    // 这个时候 静态服务器只提供一套页面 根据用户输入的url不同 由前端路由去给他分配组织不同的页面 后端还是只提供数据接口 这就是第三个阶段
+    // (这个时候就用到了 前端路由)(这个时候就是当 url改变的时候 页面不会进行整体刷新 因为都是在同一套页面下 只是根据不同的url展示不同的组件 所以只刷新涉及的相关组件即可 不会整体刷新)
+    //
+    // npm 安装应用的几个后缀
+    // 不使用后缀  安装模块到项目目录下
+    // -g  全局安装   具体安装那个位置 要看 npm config perfix 的位置
+    // --save  将模块安装在项目目录下  并在package文件的dependencies 节点写入依赖 (开发和运行都需要的依赖)
+    // --save-dev 将模块安装在项目目录下  并在package文件的devDependencies 节点写入依赖 (只有开发需要 项目运行的时候不需要)
+    //
+    // import aaa from '/aaa'  如果后面 /aaa 是一个文件夹 他会默认去文件夹找index.js文件
+    //
+    // 给路径起别名 vue-cli2 里面webpack.json.js里面有配置文件 默认有一个@ 指向src目录 vue-cli3 根据实际情况可以再搜一下
+    //
+    // ES6语法 对象的解构
+    // 例: const obj = { name: "张三", age: '18', height: '180'}
+    // 想要取出这三个参数 复制非三个变量 可以这么做
+    // const {name, height, age} = obj
+    // 这样 等于 定义了三个参数 然后将obj里面的属性 通过名称而不是顺序 赋值给这三个参数 如果有四个参数 也是代表 只取其中三个
+    //
+
+</script>
+
+</body>
+</html>
